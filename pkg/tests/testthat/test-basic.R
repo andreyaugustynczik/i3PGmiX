@@ -1,12 +1,7 @@
-library(r3PG)
+library(i3PGmiX)
 library(testthat)
 
 context("Basic Model runs work")
-
-d_site$to <- "2050-12"
-d_thinning$BA[1] <- 1
-d_thinning$stems_n[1] <- 0
-d_thinning$Vol[1] <- -999
 
 test_that("basic model run", {
     out <- run_3PG(

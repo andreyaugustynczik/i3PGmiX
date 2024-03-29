@@ -6,7 +6,7 @@ library(lubridate)
 
 library(ggplot2)
 
-library(r3PG)
+library(i3PGmiX)
 
 # 1. Load and simulate the r3PG -------------------------------------------
 f_input <- 'tests/r_vba_compare/r3PG_input.xls'

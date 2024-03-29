@@ -1,4 +1,4 @@
-library(r3PG)
+library(i3PGmiX)
 library(testthat)
 
 context("Unit test to check if the output of r3PG is identical to 3-PG VBA")
