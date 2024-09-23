@@ -5,7 +5,7 @@ i3PGmiX can simulate  water, carbon and nutrient cycles in vegetation and soil. 
 
 # Usage
 The following code snippet illustrates a basic usage of the i3PGmiX package for running a model simulation, setting up the climate data, and defining various model settings with specific simulation flags. 
-
+```r
 library(i3PGmiX)
     out <- run_3PG(
       site = d_site,
@@ -33,7 +33,7 @@ library(i3PGmiX)
 
 # Installation
 For the installation, users are required to install directly from the GitHub repository using the R package devtools. The following commands can be used to install the model in R:
-
+```r
 if(!require(devtools)){install.packages(devtools)}
 devtools::install_github( "andreyaugustynczik/i3PGmiX", build_vignettes = TRUE )
 library(i3PGmiX)
