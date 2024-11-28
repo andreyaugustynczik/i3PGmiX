@@ -938,8 +938,8 @@ REAL (kind = 8) FUNCTION calc_J(gs, x, gammastar, ca_v, kmm, delta, patm)
 	k = kmm/ca_v
 	ca = ca_v/patm*1e6
 	d = delta
-	!calc_J=4.d0*gs*ca*(1.d0-x)*(x+2.d0*g)/(x*(1.d0-d)-(g+d*k)) - documentation version is different from the package
-	calc_J=gs*ca*(1.d0-x)*(x+2.d0*g)/(x*(1.d0-d)-(g+d*k))	
+	calc_J=4.d0*gs*ca*(1.d0-x)*(x+2.d0*g)/(x*(1.d0-d)-(g+d*k)) !- documentation version is different from the package
+	!calc_J=gs*ca*(1.d0-x)*(x+2.d0*g)/(x*(1.d0-d)-(g+d*k))	
   
 end function calc_J
 
