@@ -859,20 +859,25 @@ REAL (kind = 8) FUNCTION calc_jmax_from_J(J, phi0, iabs)
 	real(kind=8), intent(in) :: J, phi0, iabs
 	real(kind=8) :: p
 
-    p = phi0 * iabs
+   	!p = phi0 * iabs
     !calc_jmax_from_J=4.d0*p/((4.d0*p/J)**2.d0-1.d0)**(1.d0/2.d0)
-	calc_jmax_from_J=4.d0*p/((p/J)**2.d0-1.d0)**(1.d0/2.d0)
+	!calc_jmax_from_J=4.d0*p/((p/J)**2.d0-1.d0)**(1.d0/2.d0)
+	p = 4.d0*phi0 * iabs
+	calc_jmax_from_J=p/((p/J)**2.d0-1.d0)**(1.d0/2.d0)
 	
 end function calc_jmax_from_J
 
 REAL (kind = 8) FUNCTION calc_djmax_dJ(J, phi0, iabs)
 
 	real(kind=8), intent(in) :: J, phi0, iabs
-	real(kind=8) :: p
+	real(kind=8) :: p, sq, psq
 	
-	p = phi0 * iabs
+	!p = phi0 * iabs
 	!calc_djmax_dJ = (4.d0*p)**3.d0/((4.d0*p)**2.d0-J**2.d0)**(3.d0/2.d0)
-	calc_djmax_dJ = 4.d0*p**3.d0/J**3.d0/((p/J)**2.d0-1.d0)**(3.d0/2.d0)
+	!calc_djmax_dJ = 4.d0*p**3.d0/J**3.d0/((p/J)**2.d0-1.d0)**(3.d0/2.d0)
+	p = 4.d0 * phi0 * iabs
+	sq = (p**2.d0-J**2.d0)**(1.d0/2.d0)
+	calc_djmax_dJ = (p/sq)**3.d0
 	
 end function calc_djmax_dJ
 
@@ -886,11 +891,12 @@ REAL (kind = 8) FUNCTION calc_dJ_dchi(gs, x, gammastar, ca_v, kmm, patm, delta)
 	ca = ca_v/patm*1e6
 	d = delta
 
-	!calc_dJ_dchi = 4.d0*gs*ca * ((d*(2*g*(k + 1.d0) + k*(2.d0*x - 1.d0) + x**2.d0) - &
-	!			((x-g)**2.d0+3.d0*g*(1.d0-g)))/(d*(k + x) + g - x)**2.d0)
-	
-	calc_dJ_dchi = gs*ca * ((d*(2.d0*g*(k + 1.d0) + k*(2.d0*x - 1.d0) + x**2.d0) - &
+	calc_dJ_dchi = 4.d0*gs*ca * ((d*(2*g*(k + 1.d0) + k*(2.d0*x - 1.d0) + x**2.d0) - &
 				((x-g)**2.d0+3.d0*g*(1.d0-g)))/(d*(k + x) + g - x)**2.d0)
+	
+	!calc_dJ_dchi = gs*ca * ((d*(2.d0*g*(k + 1.d0) + k*(2.d0*x - 1.d0) + x**2.d0) - &
+	!			((x-g)**2.d0+3.d0*g*(1.d0-g)))/(d*(k + x) + g - x)**2.d0)
+
 
 end function calc_dJ_dchi
 
@@ -957,7 +963,7 @@ REAL (kind = 8) FUNCTION f1(dpsi, psi_soil, viscosity_water, density_water, par_
     gs = calc_gs(dpsi, psi_soil, par_plant, vpd, patm, viscosity_water, density_water)
     x = calc_x_from_dpsi(dpsi, psi_soil, par_plant, gammastar, patm, vpd, viscosity_water, &
 										density_water, kmm, ca_v, delta, par_cost)
-    ajmax=calc_J(gs, x, gammastar, ca_v, kmm, delta, patm)-phi0*iabs
+    ajmax=calc_J(gs, x, gammastar, ca_v, kmm, delta, patm)-4.d0*phi0*iabs
 	
     f1=ajmax
 	
@@ -1072,7 +1078,7 @@ REAL (kind = 8) FUNCTION calc_dpsi_bound(psi_soil, ca_v, gammastar, patm, vpd, p
 	c = (ca + 2.d0*gstar)*K*Pox
 	del = b**2.d0-4.d0*a*c
 
-	approx_O2 = (-b-sqrt(b**2.d0-4.d0*a*c))/2.d0/a
+	approx_O2 = (-b-sqrt(del))/2.d0/a
 	
 	call root_scalar('zhang',f_f2,0.d0,10.d0,xzero, fzero,iflag)
 	

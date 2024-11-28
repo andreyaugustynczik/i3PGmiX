@@ -30,8 +30,10 @@ subroutine rpmodel ( tc, vpd, co2, fapar, ppfd, patm, elev, kphio, beta, soilm, 
 			   ftemp_inst_rd_v,rd_unitiabs, iabs, gpp, vcmax, vcmax25, rd, fact_jmaxlim, jmax, ftemp25_inst_jmax, &
 			   jmax25, a_j, a_c, assim, gs, ca, ci, gammastar, iwue, kmm, soilmstress, beta_v, kphio_v, patm_v
 	REAL (kind = 8), DIMENSION(5) :: out_optchi, out_lue_vcmax
-	REAL (kind = 8), DIMENSION(22) :: out
+	REAL (kind = 8), DIMENSION(22), INTENT(OUT) :: out
 	!REAL (kind = 8) :: rpmodel(16)
+
+	out(:) = 0.d0
 
 	if (patm == -1.d0) then
 		patm_v = calc_patm( elev )
@@ -272,11 +274,11 @@ subroutine rphmodel( tc, ppfd, vpd, co2, elv, fapar, kphio, psi_soil, rdark, par
 	
 
 	!u = uniroot(f_f, dpsi_bounds*0.001d0, dpsi_bounds*0.99d0,0.0001d0)
-	
+	!dpsi_bounds = 2.d0
 	call root_scalar('zhang',f_f,dpsi_bounds*0.001d0, dpsi_bounds*0.99d0,xzero, fzero,iflag)
 	
 	dpsi = xzero
-	!dpsi = 0.01140841d0
+	!dpsi = 1.d0 !0.01140841d0
 	
 	chi = calc_x_from_dpsi(dpsi, psi_soil, par_plant, gammastar, patm_v, vpd, viscosity_water, &
 										density_water, kmm, ca, delta, par_cost)
@@ -290,8 +292,8 @@ subroutine rphmodel( tc, ppfd, vpd, co2, elv, fapar, kphio, psi_soil, rdark, par
 	ca = ca/patm_v*1e6
 	kmm = kmm/patm_v*1e6
 	g = gammastar/patm_v*1e6
-	!Vcmax = (J/4.d0)*(chi*ca + kmm)/(chi*ca + 2.d0*g)
-	Vcmax = J*(chi*ca + kmm)/(chi*ca + 2.d0*g)
+	Vcmax = (J/4.d0)*(chi*ca + kmm)/(chi*ca + 2.d0*g)
+	!Vcmax = J*(chi*ca + kmm)/(chi*ca + 2.d0*g)
   
 	assim = gs * ca*(1.d0-chi)
 	
